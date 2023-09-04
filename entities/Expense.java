@@ -1,6 +1,6 @@
 /* By Agus */
 
-package datos;
+package entities;
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-import static datos.Category.enterCategory;
+import static entities.Category.enterCategory;
 import static menu.Menu.*;
 import static utils.ScreenMethods.cleanScreen;
 

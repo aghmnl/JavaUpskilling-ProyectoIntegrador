@@ -1,4 +1,5 @@
 /* By Agus */
+package controller;
 
 import static menu.Menu.optionsMenu;
 

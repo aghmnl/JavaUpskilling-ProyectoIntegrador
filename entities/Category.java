@@ -1,4 +1,4 @@
-package datos;
+package entities;
 
 import java.util.Scanner;
 

@@ -2,15 +2,15 @@
 
 package menu;
 
-import datos.Expense;
+import entities.Expense;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static datos.Category.enterCategory;
-import static datos.Expense.*;
+import static entities.Category.enterCategory;
+import static entities.Expense.*;
 import static utils.Initialization.initializeCategories;
 import static utils.Initialization.initializeExpenses;
 import static utils.ScreenMethods.cleanScreen;

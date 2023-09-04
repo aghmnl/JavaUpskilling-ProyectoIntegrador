@@ -1,6 +1,6 @@
 package utils;
 
-import datos.Expense;
+import entities.Expense;
 
 import java.util.Date;
 
