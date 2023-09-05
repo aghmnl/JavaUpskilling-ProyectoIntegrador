@@ -1,7 +1,8 @@
 /* By Agus */
 
-package menu;
+package utils;
 
+import dao.impl.CategoryDAOImpl;
 import entities.Expense;
 
 import java.text.SimpleDateFormat;
@@ -9,22 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static entities.Category.enterCategory;
 import static entities.Expense.*;
 import static utils.Initialization.initializeCategories;
 import static utils.Initialization.initializeExpenses;
 import static utils.ScreenMethods.cleanScreen;
 
 public class Menu {
-    public static List<String> categories = new ArrayList<>(); // This is the list of categories to group the expenses
-    static { categories.add("Otra"); }  // This 'otra' category is added by default. It's also used to initialize the Expense
+    CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+    Expense expenseDao = new Expense();
+
 
     public static List<Expense> expenses = new ArrayList<>(); // This is the list of expenses
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Defining the format of the date to be used along the code
 
     static Scanner scanner = new Scanner(System.in); // This is to let the user enter information in the console
 
-    public static void optionsMenu() {
+    public void optionsMenu() {
 
         initializeCategories(); // Only to be used to test the code. Then remove or comment the line.
         initializeExpenses(); // Only to be used to test the code. Then remove or comment the line.
@@ -58,7 +59,7 @@ public class Menu {
         scanner.close();   // This is to close the scanner. It should only be done at the very end of the code.
     }
 
-    private static void submenuNewExpense() {
+    private void submenuNewExpense() {
         cleanScreen();
 
         Expense expense = new Expense();
@@ -68,7 +69,7 @@ public class Menu {
         System.out.print("Ingrese la descripción del gasto: ");
         String description = scanner.next();
         expense.setDescription(description);
-        expense.setCategory(enterCategory());
+        expense.setCategory(categoryDAO.enterCategory());
         expense.setDate(enterDate());
         System.out.println("El gasto ingresado es el siguiente: ");
         System.out.println(expense);
@@ -76,7 +77,7 @@ public class Menu {
         expenses.add(expense);
     }
 
-    private static void submenuFindExpense() {
+    private void submenuFindExpense() {
         int option;
 
         do {
@@ -94,7 +95,7 @@ public class Menu {
             switch (option) {
                 case 1 -> findExpenseByDescription();
                 case 2 -> findExpenseByAmount();
-                case 3 -> findExpenseByCategory();
+                case 3 -> expenseDao.findExpenseByCategory();
                 case 4 -> findExpenseByDate();
                 case 5 -> findExpenseByID();
                 case 6 -> { cleanScreen(); listExpenses(expenses); }
@@ -104,15 +105,15 @@ public class Menu {
         } while (option != 7);
     }
 
-    private static void submenuExpensesByTime() {
+    private void submenuExpensesByTime() {
 
     }
 
-    private static void submenuExpensesByCategory() {
+    private void submenuExpensesByCategory() {
 
     }
 
-    private static void submenuManageCategories() {
+    private void submenuManageCategories() {
 
     }
 

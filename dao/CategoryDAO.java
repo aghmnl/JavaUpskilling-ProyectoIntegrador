@@ -1,4 +1,6 @@
 package dao;
 
-public interface CategoryDAO {
+import dao.dto.CategoryDTO;
+
+public interface CategoryDAO extends CRUD<CategoryDTO>{
 }

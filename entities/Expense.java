@@ -2,14 +2,15 @@
 
 package entities;
 
+import dao.impl.CategoryDAOImpl;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-
-import static entities.Category.enterCategory;
-import static menu.Menu.*;
+import static utils.Menu.dateFormat;
+import static utils.Menu.expenses;
 import static utils.ScreenMethods.cleanScreen;
 
 public class Expense {
@@ -18,6 +19,7 @@ public class Expense {
     private String category;
     private Date date;
 
+    CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
     static Scanner scanner = new Scanner(System.in);
 
 
@@ -114,8 +116,8 @@ public class Expense {
         }
         if(!amountFound) System.out.println("No se encontró ningún gasto con ese monto.");
     }
-    public static void findExpenseByCategory(){
-        String categoryToBeFound = enterCategory();
+    public void findExpenseByCategory(){
+        String categoryToBeFound = categoryDAO.enterCategory();
         int i = 0;
         boolean categoryFound = false;
         for(Expense expense : expenses) {

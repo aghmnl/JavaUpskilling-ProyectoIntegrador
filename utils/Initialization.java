@@ -1,10 +1,13 @@
 package utils;
 
+import dao.CategoryDAO;
+import dao.dto.CategoryDTO;
+import dao.impl.CategoryDAOImpl;
 import entities.Expense;
 
 import java.util.Date;
 
-import static menu.Menu.*;
+import static utils.Menu.*;
 
 public class Initialization {
 
@@ -33,9 +36,10 @@ public class Initialization {
     }
 
     public static void initializeCategories() {
-        categories.add(0, "Supermercado");
-        categories.add(0, "Casa");
-        categories.add(0, "Auto");
-        categories.add(0,"Restaurant");
+        CategoryDAO categories = new CategoryDAOImpl();
+        categories.add(new CategoryDTO("Supermercado"));
+        categories.add(new CategoryDTO("Casa"));
+        categories.add(new CategoryDTO("Auto"));
+        categories.add(new CategoryDTO("Restaurant"));
     }
 }

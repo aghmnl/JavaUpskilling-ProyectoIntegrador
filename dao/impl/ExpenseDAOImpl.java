@@ -1,11 +1,15 @@
 package dao.impl;
 
+import dao.CategoryDAO;
 import dao.ExpenseDAO;
 import dao.dto.ExpenseDTO;
 
 import java.util.List;
 
 public class ExpenseDAOImpl implements ExpenseDAO {
+
+
+
     @Override
     public List<ExpenseDTO> getAll() {
         return null;
@@ -17,8 +21,8 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     }
 
     @Override
-    public void add(ExpenseDTO expenseDTO) {
-
+    public String add(ExpenseDTO expenseDTO) {
+        return "";
     }
 
     @Override
