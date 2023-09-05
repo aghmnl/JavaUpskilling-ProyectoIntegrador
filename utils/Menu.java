@@ -14,7 +14,6 @@ import static entities.Expense.*;
 import static utils.ScreenMethods.cleanScreen;
 
 public class Menu {
-    CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
     Expense expenseDao = new Expense();
 
     public static List<Expense> expenses = new ArrayList<>(); // This is the list of expenses
@@ -54,6 +53,7 @@ public class Menu {
     }
 
     private void submenuNewExpense() {
+        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
         cleanScreen();
 
         Expense expense = new Expense();
@@ -63,7 +63,7 @@ public class Menu {
         System.out.print("Ingrese la descripción del gasto: ");
         String description = scanner.next();
         expense.setDescription(description);
-        expense.setCategory(categoryDAO.enterCategory());
+        expense.setCategory(categoryDAO.selectCategory());
         expense.setDate(enterDate());
         System.out.println("El gasto ingresado es el siguiente: ");
         System.out.println(expense);
@@ -108,6 +108,28 @@ public class Menu {
     }
 
     private void submenuManageCategories() {
+        int option;
+
+        do {
+            CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+            cleanScreen();
+            System.out.println("Ingrese la opción deseada: ");
+            System.out.println("   1. Listar todas las categorías.");
+            System.out.println("   2. Agregar categoría.");
+            System.out.println("   3. Modificar categoría.");
+            System.out.println("   4. Eliminar categoría.");
+            System.out.println("   5. Ir al menú anterior.");
+            option = scanner.nextInt();
+
+            switch (option) {
+                case 1 -> categoryDAO.showAll();
+                case 2 -> categoryDAO.addCategory();
+                case 3 -> System.out.println();
+                case 4 -> System.out.println();
+                case 5 -> System.out.println();
+                default -> System.out.println("La opción ingresada no es válida");
+            }
+        } while (option != 5);
 
     }
 

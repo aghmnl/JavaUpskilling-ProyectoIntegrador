@@ -117,7 +117,7 @@ public class Expense {
         if(!amountFound) System.out.println("No se encontró ningún gasto con ese monto.");
     }
     public void findExpenseByCategory(){
-        String categoryToBeFound = categoryDAO.enterCategory();
+        String categoryToBeFound = categoryDAO.selectCategory();
         int i = 0;
         boolean categoryFound = false;
         for(Expense expense : expenses) {

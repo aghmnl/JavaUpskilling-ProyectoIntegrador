@@ -14,7 +14,7 @@ import static utils.ScreenMethods.cleanScreen;
 
 public class CategoryDAOImpl implements CategoryDAO {
 
-    private final List<CategoryDTO> allCategories = getAll();
+    private List<CategoryDTO> allCategories = getAll();
 
 
     // Para transformar un ResultSet en una lista de EmployeeDTO
@@ -57,7 +57,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             return resultSetToCategoryList(allCategories);
 
         } catch (SQLException e) {
-            System.out.println("No se pudieron encontrar todos los empleados");
+            System.out.println("No se pudieron encontrar todas las categorías");
             throw new RuntimeException(e);
         }
     }
@@ -90,6 +90,9 @@ public class CategoryDAOImpl implements CategoryDAO {
                 // Ejecutar la inserción
                 statement.executeUpdate();
 
+                allCategories = getAll();
+                showAll();
+
                 return "Categoría agregada con éxito";
 
             } catch (SQLException e) {
@@ -109,10 +112,14 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public void update(CategoryDTO categoryDTO) {
 
+        allCategories = getAll();
+
     }
 
     @Override
     public void delete(int id) {
+
+        allCategories = getAll();
 
     }
 
@@ -120,7 +127,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     static Scanner scanner = new Scanner(System.in);
 
 
-    public String enterCategory() {
+    public String selectCategory() {
         boolean categoryIsCorrect = false;
         int categoryNumber;
         CategoryDAO categoryDAO = new CategoryDAOImpl();
@@ -137,6 +144,14 @@ public class CategoryDAOImpl implements CategoryDAO {
             }
         } while(!categoryIsCorrect);
         return allCategories.get(categoryNumber - 1).getCategoryName();
+    }
+
+    public void addCategory() {
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        System.out.print("Ingrese la nueva categoría: ");
+        String newCategory = scanner.next();
+        System.out.println(categoryDAO.add(new CategoryDTO(newCategory)));
+        System.out.println();
     }
 
 
