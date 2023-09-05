@@ -37,9 +37,10 @@ public class Initialization {
 
     public static void initializeCategories() {
         CategoryDAO categories = new CategoryDAOImpl();
-        categories.add(new CategoryDTO("Supermercado"));
-        categories.add(new CategoryDTO("Casa"));
         categories.add(new CategoryDTO("Auto"));
+        categories.add(new CategoryDTO("Casa"));
+        categories.add(new CategoryDTO("Supermercado"));
         categories.add(new CategoryDTO("Restaurant"));
+        categories.add(new CategoryDTO("Otra"));
     }
 }

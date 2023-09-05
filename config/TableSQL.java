@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static config.JDBCConfig.getDBConnection;
+import static utils.Initialization.initializeCategories;
+import static utils.Initialization.initializeExpenses;
 
 public class TableSQL {
     public static void createTableCategories() {
@@ -22,6 +24,8 @@ public class TableSQL {
             // Cerrar la conexión
             statement.close();
             connection.close();
+
+            initializeCategories(); // Sólo a los fines de inicializar la tabla con datos.
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -45,6 +49,8 @@ public class TableSQL {
             // Cerrar la conexión
             statement.close();
             connection.close();
+
+            initializeExpenses(); // Sólo a los fines de inicializar la tabla con datos.
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

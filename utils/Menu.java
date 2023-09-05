@@ -11,14 +11,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import static entities.Expense.*;
-import static utils.Initialization.initializeCategories;
-import static utils.Initialization.initializeExpenses;
 import static utils.ScreenMethods.cleanScreen;
 
 public class Menu {
     CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
     Expense expenseDao = new Expense();
-
 
     public static List<Expense> expenses = new ArrayList<>(); // This is the list of expenses
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Defining the format of the date to be used along the code
@@ -26,9 +23,6 @@ public class Menu {
     static Scanner scanner = new Scanner(System.in); // This is to let the user enter information in the console
 
     public void optionsMenu() {
-
-        initializeCategories(); // Only to be used to test the code. Then remove or comment the line.
-        initializeExpenses(); // Only to be used to test the code. Then remove or comment the line.
 
         int option;
 

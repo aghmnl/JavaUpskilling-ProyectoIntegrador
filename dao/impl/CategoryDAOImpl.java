@@ -16,6 +16,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     private final List<CategoryDTO> allCategories = getAll();
 
+
     // Para transformar un ResultSet en una lista de EmployeeDTO
     private List<CategoryDTO> resultSetToCategoryList(ResultSet allCategories) throws SQLException {
         List<CategoryDTO> newListCategories = new ArrayList<>();
@@ -127,6 +128,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             System.out.println("Seleccione la categoría entre las siguientes opciones: ");
             categoryDAO.showAll();
             categoryNumber = scanner.nextInt();
+            System.out.println("la categoría seleccionada es: " +categoryNumber);
             if ((categoryNumber < 1) || (categoryNumber > allCategories.size())) {
                 cleanScreen();
                 System.out.println("La categoría seleccionada es incorrecta.");
