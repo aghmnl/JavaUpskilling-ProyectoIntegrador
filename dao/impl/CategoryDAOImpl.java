@@ -75,18 +75,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 
             // Ejecuta la consulta
             ResultSet categoryFound = statement.executeQuery();
-//            ResultSet categoryFound = statement.executeQuery(getAllCategoriesSQL);
 
-//            if (!categoryFound.next()) {
-//                System.out.println("El resultado de la query está vacío");
-//            }
-
-            // ATENCIÓN CON ESTE PASO!! CLAVE!! Hay que mover el cursos al primer registro.
+            // ATENCIÓN CON ESTE PASO!! CLAVE!! Hay que mover el cursor al primer registro.
             categoryFound.next();
-
-//            System.out.println("El resultado de la query: " + categoryFound);
-
-            //            System.out.println("La categoría devuelta: " + id);
 
             return (categoryFound.getInt("id"));
 
@@ -206,8 +197,6 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public void delete(int id) {
 
-        System.out.println("El ide de restaurante es: " + id);
-
         try {
             // Establecer la conexión
             Connection connection = getDBConnection();
@@ -274,7 +263,6 @@ public class CategoryDAOImpl implements CategoryDAO {
         Scanner scanner = new Scanner(System.in);
         String newCategory = scanner.next();
         int newId = getCategoryId(categorySelected);
-//        System.out.println("Resultado de getCategoryId: " + newId);
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         categoryDAO.update(new CategoryDTO(newCategory), newId);
     }
