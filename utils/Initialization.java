@@ -25,10 +25,10 @@ public class Initialization {
         } catch (Exception e) {
             System.out.println("Invalid date format");
         }
-        Expense expense1 = new Expense(10, "frutas", "Supermercado", date1);
-        Expense expense2 = new Expense(54, "cena", "Restaurant", date2);
-        Expense expense3 = new Expense(78, "limpieza", "Auto", date3);
-        Expense expense4 = new Expense(25, "luz", "Casa", date4);
+        Expense expense1 = new Expense(1, 10, "frutas", "Supermercado", date1);
+        Expense expense2 = new Expense(2, 54, "cena", "Restaurant", date2);
+        Expense expense3 = new Expense(3, 78, "limpieza", "Auto", date3);
+        Expense expense4 = new Expense(4, 25, "luz", "Casa", date4);
         expenses.add(expense1);
         expenses.add(expense2);
         expenses.add(expense3);

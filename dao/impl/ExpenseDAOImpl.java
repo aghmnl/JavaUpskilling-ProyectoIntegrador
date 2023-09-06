@@ -1,6 +1,5 @@
 package dao.impl;
 
-import dao.CategoryDAO;
 import dao.ExpenseDAO;
 import dao.dto.ExpenseDTO;
 
@@ -31,7 +30,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     }
 
     @Override
-    public void update(ExpenseDTO expenseDTO) {
+    public void update(ExpenseDTO expenseDTO, int id) {
 
     }
 

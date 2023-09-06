@@ -7,6 +7,6 @@ public interface CRUD<T> {
         void showAll();
         String add(T t);
         T get(int id);
-        void update(T t);
+        void update(T t, int id);
         void delete(int id);
 }

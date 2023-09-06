@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static config.JDBCConfig.getDBConnection;
-import static utils.Initialization.initializeCategories;
 import static utils.Initialization.initializeExpenses;
 
 public class TableSQL {
@@ -18,14 +17,15 @@ public class TableSQL {
             Statement statement = connection.createStatement();
 
             // Creando una tabla Gastos
-            String createTableCategoriesSQL = "CREATE TABLE IF NOT EXISTS categorias (nombre VARCHAR(50) NOT NULL);";
+            String createTableCategoriesSQL = "CREATE TABLE IF NOT EXISTS categorias (id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "nombre VARCHAR(50) NOT NULL);";
             statement.executeUpdate(createTableCategoriesSQL);
 
             // Cerrar la conexión
             statement.close();
             connection.close();
 
-            initializeCategories(); // Sólo a los fines de inicializar la tabla con datos.
+//            initializeCategories(); // Sólo a los fines de inicializar la tabla con datos la primera vez que se crea la tabla.
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

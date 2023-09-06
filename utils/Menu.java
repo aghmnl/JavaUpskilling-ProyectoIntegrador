@@ -63,7 +63,7 @@ public class Menu {
         System.out.print("Ingrese la descripción del gasto: ");
         String description = scanner.next();
         expense.setDescription(description);
-        expense.setCategory(categoryDAO.selectCategory());
+        expense.setCategory(categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: "));
         expense.setDate(enterDate());
         System.out.println("El gasto ingresado es el siguiente: ");
         System.out.println(expense);
@@ -124,8 +124,8 @@ public class Menu {
             switch (option) {
                 case 1 -> categoryDAO.showAll();
                 case 2 -> categoryDAO.addCategory();
-                case 3 -> System.out.println();
-                case 4 -> System.out.println();
+                case 3 -> categoryDAO.editCategory();
+                case 4 -> categoryDAO.deleteCategory();
                 case 5 -> System.out.println();
                 default -> System.out.println("La opción ingresada no es válida");
             }

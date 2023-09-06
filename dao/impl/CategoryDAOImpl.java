@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.CategoryDAO;
 import dao.dto.CategoryDTO;
+import entities.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,28 +15,85 @@ import static utils.ScreenMethods.cleanScreen;
 
 public class CategoryDAOImpl implements CategoryDAO {
 
-    private List<CategoryDTO> allCategories = getAll();
+    private List<CategoryDTO> allCategoriesDTO = getAll();
 
+    private Category resultSetToCategory(ResultSet category) {
+//        System.out.println("Categoría recibida por resultSetToCategory: " + category);
+        int id = 0;
+        String categoryName = null;
+        try {
+            id = category.getInt("id");
+            categoryName = category.getString("nombre");
+        } catch (SQLException e) {
+            System.out.println("No fue posible encontrar datos de la categoría");
+            throw new RuntimeException(e);
+        }
+        return new Category(id, categoryName);
+    }
 
     // Para transformar un ResultSet en una lista de EmployeeDTO
-    private List<CategoryDTO> resultSetToCategoryList(ResultSet allCategories) throws SQLException {
+    private List<CategoryDTO> resultSetToCategoryDTOList(ResultSet allCategories) throws SQLException {
         List<CategoryDTO> newListCategories = new ArrayList<>();
         while(allCategories.next()) {
-            String nombre = allCategories.getString("nombre");
-            newListCategories.add(new CategoryDTO(nombre));
+            newListCategories.add(new CategoryDTO(resultSetToCategory(allCategories).getCategoryName()));
         }
         return newListCategories;
     }
 
-    private boolean isCategoryInList(List<CategoryDTO> allCategories, String category) {
-        boolean isCategoryInList = false;
-        for(CategoryDTO categoryDTO : allCategories) {
-            if(Objects.equals(categoryDTO.getCategoryName(), category)) {
-                isCategoryInList = true;
-                break;
+    private int categoryInListIndex (List<CategoryDTO> allCategories, String category) {
+        int index = -1;
+        for (int i = 0; i < allCategories.size(); i++) {
+            if(Objects.equals(allCategories.get(i).getCategoryName(), category)) {
+                index = i;
+                i = allCategories.size();
+            } else {
+                i++;
             }
         }
-        return isCategoryInList;
+        return index;
+    }
+
+    private boolean isCategoryInList(List<CategoryDTO> allCategories, String category) {
+        return !(categoryInListIndex(allCategories, category) == -1);
+    }
+
+
+    // Dado el nombre de una categoría, lo busca en la lista y devuelve su índice
+    private int getCategoryId(String categoryName) {
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Sentencia SQL para encontrar una categoría según su nombre
+            String getCategorySQL = "SELECT id, nombre FROM categorias WHERE nombre = ?;";
+
+            // Realizar operaciones en la base de datos
+            PreparedStatement statement = connection.prepareStatement(getCategorySQL);
+
+            // Establecer los valores en el PreparedStatement
+            statement.setString(1, categoryName);
+
+            // Ejecuta la consulta
+            ResultSet categoryFound = statement.executeQuery();
+//            ResultSet categoryFound = statement.executeQuery(getAllCategoriesSQL);
+
+//            if (!categoryFound.next()) {
+//                System.out.println("El resultado de la query está vacío");
+//            }
+
+            // ATENCIÓN CON ESTE PASO!! CLAVE!! Hay que mover el cursos al primer registro.
+            categoryFound.next();
+
+//            System.out.println("El resultado de la query: " + categoryFound);
+
+            //            System.out.println("La categoría devuelta: " + id);
+
+            return (categoryFound.getInt("id"));
+
+        } catch (SQLException e) {
+            System.out.println("No se pudieron encontrar todas las categorías");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -54,7 +112,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             ResultSet allCategories = statement.executeQuery(getAllCategoriesSQL);
 
             // Devuelve el resultado
-            return resultSetToCategoryList(allCategories);
+            return resultSetToCategoryDTOList(allCategories);
 
         } catch (SQLException e) {
             System.out.println("No se pudieron encontrar todas las categorías");
@@ -65,7 +123,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public void showAll() {
         int i = 1;
-        for (CategoryDTO category : allCategories) {
+        for (CategoryDTO category : allCategoriesDTO) {
             System.out.println(i + ". " + category.getCategoryName());
             i++;
         }
@@ -79,10 +137,10 @@ public class CategoryDAOImpl implements CategoryDAO {
                 Connection connection = getDBConnection();
 
                 // Sentencia SQL para agregar un empleado
-                String addEmployeeSQL = "INSERT INTO categorias (nombre) VALUES (?);";
+                String addCategorySQL = "INSERT INTO categorias (nombre) VALUES (?);";
 
                 // Realizar operaciones en la base de datos
-                PreparedStatement statement = connection.prepareStatement(addEmployeeSQL);
+                PreparedStatement statement = connection.prepareStatement(addCategorySQL);
 
                 // Establecer los valores en el PreparedStatement
                 statement.setString(1, categoryDTO.getCategoryName());
@@ -90,13 +148,13 @@ public class CategoryDAOImpl implements CategoryDAO {
                 // Ejecutar la inserción
                 statement.executeUpdate();
 
-                allCategories = getAll();
-                showAll();
+                // Actualizo la lista de categorías
+                allCategoriesDTO = getAll();
 
                 return "Categoría agregada con éxito";
 
             } catch (SQLException e) {
-                System.out.println("El registro no pudo ser agregado");
+                System.out.println("La categoría no pudo ser agregada");
                 throw new RuntimeException(e);
             }
         } else {
@@ -110,43 +168,98 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public void update(CategoryDTO categoryDTO) {
+    public void update(CategoryDTO categoryDTO, int id) {
 
-        allCategories = getAll();
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Sentencia SQL para actualizar un empleado según su id
+            String updateCategorySQL = "UPDATE categorias SET nombre = ? WHERE id = ?";
+
+            // Realizar operaciones en la base de datos
+            PreparedStatement statement = connection.prepareStatement(updateCategorySQL);
+
+            // Establecer los valores en el PreparedStatement
+            statement.setString(1, categoryDTO.getCategoryName());
+            statement.setInt(2, id);
+
+            // Ejecutar la actualización
+            int numberOfRows = statement.executeUpdate();
+
+            // Verificar si la actualización fue exitosa
+            if (numberOfRows > 0) {
+                // Actualizo la lista de categorías
+                allCategoriesDTO = getAll();
+                System.out.println("El registro se actualizó exitosamente.");
+            } else {
+                System.out.println("No se encontró el registro especificado.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("El registro no pudo ser actualizado");
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     public void delete(int id) {
 
-        allCategories = getAll();
+        System.out.println("El ide de restaurante es: " + id);
 
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Sentencia SQL para actualizar una categoría según su id
+            String deleteCategorySQL = "DELETE FROM categorias WHERE id = ?";
+
+            // Realizar operaciones en la base de datos
+            PreparedStatement statement = connection.prepareStatement(deleteCategorySQL);
+
+            // Establecer los valores en el PreparedStatement
+            statement.setInt(1, id);
+
+            // Ejecutar la eliminación
+            int numberOfRows = statement.executeUpdate();
+
+            // Verificar si la eliminación fue exitosa
+            if (numberOfRows > 0) {
+                // Actualizo la lista de categorías
+                allCategoriesDTO = getAll();
+                System.out.println("La categoría se eliminó exitosamente.");
+            } else {
+                System.out.println("No se pudo eliminar la categoría.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("La categoría no pudo ser eliminada");
+            throw new RuntimeException(e);
+        }
     }
 
-
-    static Scanner scanner = new Scanner(System.in);
-
-
-    public String selectCategory() {
+    public String selectCategory(String message) {
+        Scanner scanner = new Scanner(System.in);
         boolean categoryIsCorrect = false;
         int categoryNumber;
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         do {
-            System.out.println("Seleccione la categoría entre las siguientes opciones: ");
+            System.out.println(message);
             categoryDAO.showAll();
             categoryNumber = scanner.nextInt();
-            System.out.println("la categoría seleccionada es: " +categoryNumber);
-            if ((categoryNumber < 1) || (categoryNumber > allCategories.size())) {
+            if ((categoryNumber < 1) || (categoryNumber > allCategoriesDTO.size())) {
                 cleanScreen();
                 System.out.println("La categoría seleccionada es incorrecta.");
             } else {
                 categoryIsCorrect = true;
             }
         } while(!categoryIsCorrect);
-        return allCategories.get(categoryNumber - 1).getCategoryName();
+        return allCategoriesDTO.get(categoryNumber - 1).getCategoryName();
     }
 
     public void addCategory() {
+        Scanner scanner = new Scanner(System.in);
         CategoryDAO categoryDAO = new CategoryDAOImpl();
         System.out.print("Ingrese la nueva categoría: ");
         String newCategory = scanner.next();
@@ -154,5 +267,33 @@ public class CategoryDAOImpl implements CategoryDAO {
         System.out.println();
     }
 
+    public void editCategory() {
+        String categorySelected = selectCategory("Seleccione de la lista la categoría a modificar: ");
+        System.out.println("Categoría elegida: " + categorySelected);
+        System.out.print("Ingrese el nuevo texto: ");
+        Scanner scanner = new Scanner(System.in);
+        String newCategory = scanner.next();
+        int newId = getCategoryId(categorySelected);
+//        System.out.println("Resultado de getCategoryId: " + newId);
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        categoryDAO.update(new CategoryDTO(newCategory), newId);
+    }
+
+    public void deleteCategory() {
+        String categorySelected = selectCategory("Seleccione de la lista la categoría a eliminar: ");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Está seguro que desea eliminar la categoría " + categorySelected + "? (S/N)");
+        String opcionElegida = scanner.next().toUpperCase();
+        while (!Objects.equals(opcionElegida, "S") && !Objects.equals(opcionElegida, "N")) {
+            System.out.println("Respuesta incorrecta, por favor elegir entre S (Sí) y N (No)");
+            opcionElegida = scanner.next().toUpperCase();
+        };
+        if(opcionElegida.equals("S")) {
+            CategoryDAO categoryDAO = new CategoryDAOImpl();
+            categoryDAO.delete(getCategoryId(categorySelected));
+        } else {
+            System.out.println("La categoría no fue eliminada");
+        }
+    };
 
 }

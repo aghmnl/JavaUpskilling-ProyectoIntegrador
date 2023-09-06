@@ -14,6 +14,7 @@ import static utils.Menu.expenses;
 import static utils.ScreenMethods.cleanScreen;
 
 public class Expense {
+    private int id;
     private float amount;
     private String description;
     private String category;
@@ -23,7 +24,8 @@ public class Expense {
     static Scanner scanner = new Scanner(System.in);
 
 
-    public Expense(float amount, String description, String category, Date date) {
+    public Expense(int id, float amount, String description, String category, Date date) {
+        this.id = id;
         this.amount = amount;
         this.description = description;
         this.category = category;
@@ -117,7 +119,7 @@ public class Expense {
         if(!amountFound) System.out.println("No se encontró ningún gasto con ese monto.");
     }
     public void findExpenseByCategory(){
-        String categoryToBeFound = categoryDAO.selectCategory();
+        String categoryToBeFound = categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: ");
         int i = 0;
         boolean categoryFound = false;
         for(Expense expense : expenses) {
