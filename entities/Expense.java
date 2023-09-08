@@ -90,10 +90,6 @@ public class Expense {
         return date;
     }
 
-    @Override
-    public String toString() {
-        return "$" + this.amount + " " + this.description + " [" + this.category + "] " + dateFormat.format(this.date);
-    }
 
     public static void  findExpenseByDescription() {
         System.out.print("Por favor ingresar el texto a buscar en la descripción: ");

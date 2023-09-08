@@ -17,10 +17,10 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     private List<CategoryDTO> allCategoriesDTO = getAll();
 
+    //Convierte un resultSet con un único registro de categoría en Category
     private Category resultSetToCategory(ResultSet category) {
-//        System.out.println("Categoría recibida por resultSetToCategory: " + category);
-        int id = 0;
-        String categoryName = null;
+        int id;
+        String categoryName;
         try {
             id = category.getInt("id");
             categoryName = category.getString("nombre");
@@ -31,11 +31,16 @@ public class CategoryDAOImpl implements CategoryDAO {
         return new Category(id, categoryName);
     }
 
-    // Para transformar un ResultSet en una lista de EmployeeDTO
+    // Convierte Category a CategoryDTO. Notar que CategoryDTO no tiene id.
+    private CategoryDTO categoryToCategoryDTO (Category category) {
+        return new CategoryDTO(category.getCategoryName());
+    }
+
+    // Transforma un ResultSet con varios registros en una lista de EmployeeDTO
     private List<CategoryDTO> resultSetToCategoryDTOList(ResultSet allCategories) throws SQLException {
         List<CategoryDTO> newListCategories = new ArrayList<>();
         while(allCategories.next()) {
-            newListCategories.add(new CategoryDTO(resultSetToCategory(allCategories).getCategoryName()));
+            newListCategories.add(categoryToCategoryDTO(resultSetToCategory(allCategories)));
         }
         return newListCategories;
     }
@@ -96,7 +101,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             // Realizar operaciones en la base de datos
             Statement statement = connection.createStatement();
 
-            // Sentencia SQL para leer todos los empleados
+            // Sentencia SQL para leer todas las categorías
             String getAllCategoriesSQL = "SELECT * FROM categorias;";
 
             // Ejecuta la consulta

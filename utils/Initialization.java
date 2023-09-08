@@ -1,18 +1,21 @@
 package utils;
 
 import dao.CategoryDAO;
+import dao.ExpenseDAO;
 import dao.dto.CategoryDTO;
+import dao.dto.ExpenseDTO;
 import dao.impl.CategoryDAOImpl;
-import entities.Expense;
+import dao.impl.ExpenseDAOImpl;
 
 import java.util.Date;
 
-import static utils.Menu.*;
+import static utils.Menu.dateFormat;
 
 public class Initialization {
 
 
     public static void initializeExpenses() {
+        ExpenseDAO expenses = new ExpenseDAOImpl();
         Date date1 = null;
         Date date2 = null;
         Date date3 = null;
@@ -23,16 +26,12 @@ public class Initialization {
             date3 = dateFormat.parse("15-02-2023");
             date4 = dateFormat.parse("06-05-2023");
         } catch (Exception e) {
-            System.out.println("Invalid date format");
+            System.out.println("Formato de fecha inválido");
         }
-        Expense expense1 = new Expense(1, 10, "frutas", "Supermercado", date1);
-        Expense expense2 = new Expense(2, 54, "cena", "Restaurant", date2);
-        Expense expense3 = new Expense(3, 78, "limpieza", "Auto", date3);
-        Expense expense4 = new Expense(4, 25, "luz", "Casa", date4);
-        expenses.add(expense1);
-        expenses.add(expense2);
-        expenses.add(expense3);
-        expenses.add(expense4);
+        expenses.add(new ExpenseDTO(10, "frutas", "Supermercado", date1));
+        expenses.add(new ExpenseDTO( 54, "cena", "Restaurant", date2));
+        expenses.add(new ExpenseDTO(78, "limpieza", "Auto", date3));
+        expenses.add(new ExpenseDTO(25, "luz", "Casa", date4));
     }
 
     public static void initializeCategories() {

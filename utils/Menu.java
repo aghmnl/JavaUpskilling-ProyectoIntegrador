@@ -2,11 +2,16 @@
 
 package utils;
 
+import dao.CategoryDAO;
+import dao.ExpenseDAO;
+import dao.dto.ExpenseDTO;
 import dao.impl.CategoryDAOImpl;
+import dao.impl.ExpenseDAOImpl;
 import entities.Expense;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,7 +19,7 @@ import static entities.Expense.*;
 import static utils.ScreenMethods.cleanScreen;
 
 public class Menu {
-    Expense expenseDao = new Expense();
+    ExpenseDAO expenseDAO = new ExpenseDAOImpl();
 
     public static List<Expense> expenses = new ArrayList<>(); // This is the list of expenses
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Defining the format of the date to be used along the code
@@ -28,10 +33,10 @@ public class Menu {
         do {
             System.out.println("Ingrese la opción deseada: ");
             System.out.println("   1. Ingresar un gasto.");
-            if(!expenses.isEmpty()) System.out.println("   2. Ver, editar o eliminar un gasto.");
+            if(!expenseDAO.getAll().isEmpty()) System.out.println("   2. Ver, editar o eliminar un gasto.");
             System.out.println("   3. Gestionar categorías.");
-            if(!expenses.isEmpty()) System.out.println("   4. Ver gastos por rubro.");
-            if(!expenses.isEmpty()) System.out.println("   5. Ver gastos por periodo.");
+            if(!expenseDAO.getAll().isEmpty()) System.out.println("   4. Ver gastos por rubro.");
+            if(!expenseDAO.getAll().isEmpty()) System.out.println("   5. Ver gastos por periodo.");
             System.out.println("   6. Salir de la aplicación.");
             option = scanner.nextInt();
 
@@ -53,25 +58,24 @@ public class Menu {
     }
 
     private void submenuNewExpense() {
-        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+
         cleanScreen();
-
-        Expense expense = new Expense();
-
         System.out.print("Ingrese el monto del gasto: ");
-        expense.setAmount(scanner.nextFloat());
+        float amount = scanner.nextFloat();
         System.out.print("Ingrese la descripción del gasto: ");
         String description = scanner.next();
-        expense.setDescription(description);
-        expense.setCategory(categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: "));
-        expense.setDate(enterDate());
+        String category = categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: ");
+        Date date = enterDate();
         System.out.println("El gasto ingresado es el siguiente: ");
-        System.out.println(expense);
-
-        expenses.add(expense);
+        ExpenseDTO expenseDTO = new ExpenseDTO(amount, description, category, date);
+        System.out.println(expenseDTO);
+        expenseDAO.add(expenseDTO);
+        System.out.println();
     }
 
     private void submenuFindExpense() {
+        ExpenseDAO expenseDAO = new ExpenseDAOImpl();
         int option;
 
         do {
@@ -89,10 +93,10 @@ public class Menu {
             switch (option) {
                 case 1 -> findExpenseByDescription();
                 case 2 -> findExpenseByAmount();
-                case 3 -> expenseDao.findExpenseByCategory();
+                case 3 -> expenseDAO.showExpenseByCategory();
                 case 4 -> findExpenseByDate();
                 case 5 -> findExpenseByID();
-                case 6 -> { cleanScreen(); listExpenses(expenses); }
+                case 6 -> expenseDAO.showAll();
                 case 7 -> System.out.println();
                 default -> System.out.println("La opción ingresada no es válida");
             }
