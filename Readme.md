@@ -25,14 +25,16 @@ Los gastos constan de:
 ### Precarga de datos
 
 #### Gastos
-Se precargan los siguientes gastos a modo de ejemplo cada vez que se ejecuta la aplicación:
+Se precargan los siguientes gastos a modo de ejemplo la primera vez que se ejecuta
+la aplicación (comprueba la inexistencia de la tabla en la base de datos para hacerlo):
 1. $10.0 frutas [Supermercado] 10-09-2023
 2. $54.0 cena [Restaurant] 23-07-2023
 3. $78.0 limpieza [Auto] 15-02-2023
 4. $25.0 luz [Casa] 06-05-2023
 
 #### Categorías
-Se precargan las siguientes categorías a modo de ejemplo cada vez que se ejecuta la aplicación:
+Se precargan las siguientes categorías a modo de ejemplo la primera vez que se ejecuta
+la aplicación (comprueba la inexistencia de la tabla en la base de datos para hacerlo):
 1. Auto
 2. Casa
 3. Supermercado

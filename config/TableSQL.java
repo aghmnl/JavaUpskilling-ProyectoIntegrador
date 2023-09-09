@@ -1,14 +1,31 @@
 package config;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static config.JDBCConfig.getDBConnection;
 import static utils.Initialization.initializeCategories;
 import static utils.Initialization.initializeExpenses;
 
 public class TableSQL {
+
+    public static boolean tableExists(String tableName) {
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Get the database metadata
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+
+            // Comprueba la existencia de la tabla
+            ResultSet rs = databaseMetaData.getTables(null, null, tableName, null);
+
+            // Devuelve el resultado de la query
+            return rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void createTableCategories() {
         try {
             // Establecer la conexión
@@ -17,7 +34,7 @@ public class TableSQL {
             // Realizar operaciones en la base de datos
             Statement statement = connection.createStatement();
 
-            // Creando una tabla Gastos
+            // Creando una tabla Gastos.
             String createTableCategoriesSQL = "CREATE TABLE IF NOT EXISTS categorias (id INT PRIMARY KEY AUTO_INCREMENT, " +
                     "nombre VARCHAR(50) NOT NULL);";
             statement.executeUpdate(createTableCategoriesSQL);
