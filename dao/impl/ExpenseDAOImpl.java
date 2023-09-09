@@ -206,7 +206,8 @@ public class ExpenseDAOImpl implements ExpenseDAO {
 
     @Override
     public void findExpenseByMonth() {
-        System.out.println(getMonths());
+        System.out.println("Elija el mes ");
+        printList(getMonths());
     }
 
     @Override

@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static common.ListMethods.printList;
+import static common.ListMethods.selectFromList;
 import static config.JDBCConfig.getDBConnection;
-import static utils.ScreenMethods.cleanScreen;
 
 public class CategoryDAOImpl implements CategoryDAO {
 
@@ -232,19 +232,18 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     public String selectCategory(String message) {
-        boolean categoryIsCorrect = false;
-        int categoryNumber;
-        do {
-            System.out.println(message);
-            showAll();
-            categoryNumber = scanner.nextInt();
-            if ((categoryNumber < 1) || (categoryNumber > allCategoriesDTO.size())) {
-                cleanScreen();
-                System.out.println("La categoría seleccionada es incorrecta.");
-            } else {
-                categoryIsCorrect = true;
-            }
-        } while(!categoryIsCorrect);
+        int categoryNumber = selectFromList(allCategoriesDTO.size(), message, new CategoryDAOImpl());
+//        do {
+//            System.out.println(message);
+//            showAll();
+//            categoryNumber = scanner.nextInt();
+//            if ((categoryNumber < 1) || (categoryNumber > allCategoriesDTO.size())) {
+//                cleanScreen();
+//                System.out.println("La categoría seleccionada es incorrecta.");
+//            } else {
+//                categoryIsCorrect = true;
+//            }
+//        } while(!categoryIsCorrect);
         return allCategoriesDTO.get(categoryNumber - 1).getCategoryName();
     }
 
@@ -271,12 +270,12 @@ public class CategoryDAOImpl implements CategoryDAO {
         while (!Objects.equals(opcionElegida, "S") && !Objects.equals(opcionElegida, "N")) {
             System.out.println("Respuesta incorrecta, por favor elegir entre S (Sí) y N (No)");
             opcionElegida = scanner.next().toUpperCase();
-        };
+        }
         if(opcionElegida.equals("S")) {
             delete(getCategoryId(categorySelected));
         } else {
             System.out.println("La categoría no fue eliminada");
         }
-    };
+    }
 
 }
