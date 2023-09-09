@@ -8,7 +8,7 @@ import static utils.Initialization.initializeExpenses;
 
 public class TableSQL {
 
-    public static boolean tableExists(String tableName) {
+    public static boolean tableDoesNotExist(String tableName) {
         try {
             // Establecer la conexión
             Connection connection = getDBConnection();
@@ -17,10 +17,10 @@ public class TableSQL {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
 
             // Comprueba la existencia de la tabla
-            ResultSet rs = databaseMetaData.getTables(null, null, tableName, null);
+            ResultSet rs = databaseMetaData.getTables(null, null, "GASTOS", null);
 
             // Devuelve el resultado de la query
-            return rs.next();
+            return !rs.next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -28,6 +28,8 @@ public class TableSQL {
 
     public static void createTableCategories() {
         try {
+            System.out.println("Creando tabla 'categorias' e inicializándola con datos de ejemplo");
+            System.out.println();
             // Establecer la conexión
             Connection connection = getDBConnection();
 
@@ -43,6 +45,7 @@ public class TableSQL {
             statement.close();
             connection.close();
 
+
             initializeCategories(); // Sólo a los fines de inicializar la tabla con datos la primera vez que se crea la tabla.
 
         } catch (SQLException e) {
@@ -52,6 +55,9 @@ public class TableSQL {
 
     public static void createTableExpenses() {
         try {
+            System.out.println("Creando tabla 'gastos' e inicializándola con datos de ejemplo");
+            System.out.println();
+
             // Establecer la conexión
             Connection connection = getDBConnection();
 
