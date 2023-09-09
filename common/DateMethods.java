@@ -8,15 +8,14 @@ import static utils.ScreenMethods.cleanScreen;
 
 
 public class DateMethods {
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-    public static java.util.Date enterDate() {
+    public static java.util.Date enterDate(String message) {
         Scanner scanner = new Scanner(System.in);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
         boolean dateIsCorrect = false;
         java.util.Date date = new java.util.Date();
         do {
-            System.out.print("Ingrese la fecha en el formato dd-mm-aaaa: ");
+            System.out.print(message);
             String dateString = scanner.next();
             try {
                 date = dateFormat.parse(dateString);

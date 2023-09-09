@@ -14,8 +14,6 @@ public class Menu {
     ExpenseDAO expenseDAO = new ExpenseDAOImpl();
     CategoryDAO categoryDAO = new CategoryDAOImpl();
 
-//    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Defining the format of the date to be used along the code
-
     static Scanner scanner = new Scanner(System.in); // Esto es para que el usuario pueda ingresar la información por consola
 
     public void optionsMenu() {

@@ -10,9 +10,9 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static common.DateMethods.dateFormat;
 import static common.DateMethods.enterDate;
 import static common.ListMethods.*;
-import static common.ListMethods.selectFromList;
 import static config.JDBCConfig.getDBConnection;
 import static utils.ScreenMethods.cleanScreen;
 
@@ -163,7 +163,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         System.out.print("Ingrese la descripción del gasto: ");
         String description = scanner.next();
         String category = categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: ");
-        java.util.Date date = enterDate();
+        java.util.Date date = enterDate("Ingrese la fecha en el formato dd-mm-aaaa: ");
         System.out.println("El gasto ingresado es el siguiente: ");
         ExpenseDTO expenseDTO = new ExpenseDTO(amount, description, category, date);
         System.out.println(expenseDTO);
@@ -205,7 +205,14 @@ public class ExpenseDAOImpl implements ExpenseDAO {
 
     @Override
     public void showExpenseByDates() {
+        java.util.Date startDate = enterDate("Ingrese la primera fecha en el formato dd-mm-aaaa: ");
+        java.util.Date endDate = enterDate("Ingrese la última fecha en el formato dd-mm-aaaa: ");
 
+        System.out.println("Los gastos entre el " + dateFormat.format(startDate) + " y el " + dateFormat.format(endDate) + " (inclusive) son los siguientes: ");
+        List<ExpenseDTO> filteredExpenses = allExpensesDTO.stream().
+                 filter(e -> e.getDate().after(startDate) && e.getDate().before(new java.util.Date(endDate.getTime() + 24 * 60 * 60 * 1000))) // Acá agrego un día al endDate para que el filtrado sea inclusive
+                .toList();
+        printList(filteredExpenses);
     }
 
 

@@ -1,19 +1,15 @@
 /* By Agus */
 package dao.dto;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static common.DateMethods.dateFormat;
 
 public class ExpenseDTO {
     private float amount;
     private String description;
     private String category;
     private Date date;
-
-
-    public ExpenseDTO() {
-        // Default constructor
-    }
 
     public ExpenseDTO(float amount, String description, String category, Date date) {
         this.amount = amount;
@@ -56,7 +52,6 @@ public class ExpenseDTO {
 
     @Override
     public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        return "$" + this.amount + " " + this.description + " [" + this.category + "] " + sdf.format(this.date);
+        return "$" + this.amount + " " + this.description + " [" + this.category + "] " + dateFormat.format(this.date);
     }
 }

@@ -8,14 +8,14 @@ import dao.dto.ExpenseDTO;
 import dao.impl.CategoryDAOImpl;
 import dao.impl.ExpenseDAOImpl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static common.DateMethods.dateFormat;
 
 public class Initialization {
 
 
     public static void initializeExpenses() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         ExpenseDAO expenses = new ExpenseDAOImpl();
         Date date1 = new Date();
