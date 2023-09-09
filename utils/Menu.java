@@ -6,11 +6,7 @@ import dao.CategoryDAO;
 import dao.ExpenseDAO;
 import dao.impl.CategoryDAOImpl;
 import dao.impl.ExpenseDAOImpl;
-import entities.Expense;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import static utils.ScreenMethods.cleanScreen;
@@ -19,8 +15,7 @@ public class Menu {
     ExpenseDAO expenseDAO = new ExpenseDAOImpl();
     CategoryDAO categoryDAO = new CategoryDAOImpl();
 
-    public static List<Expense> expenses = new ArrayList<>(); // This is the list of expenses
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Defining the format of the date to be used along the code
+//    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Defining the format of the date to be used along the code
 
     static Scanner scanner = new Scanner(System.in); // Esto es para que el usuario pueda ingresar la información por consola
 
@@ -44,7 +39,7 @@ public class Menu {
                 case 1 -> expenseDAO.addExpense();
                 case 2 -> expenseDAO.showAll();
                 case 3 -> expenseDAO.showExpenseByCategory();
-                case 4 -> expenseDAO.showExpenseByTime();
+                case 4 -> submenuTimeFiltering();
                 case 5 -> submenuManageExpenses();
                 case 6 -> submenuManageCategories();
                 case 7 -> {
@@ -94,7 +89,7 @@ public class Menu {
         do {
             cleanScreen();
             System.out.println("Ingrese la opción deseada: ");
-            System.out.println("   1. Listar todas las categorías.");
+            System.out.println("   1. Ver todas las categorías.");
             System.out.println("   2. Agregar categoría.");
             System.out.println("   3. Modificar categoría.");
             System.out.println("   4. Eliminar categoría.");
@@ -112,4 +107,27 @@ public class Menu {
         } while (option != 5);
 
     }
+
+    private void submenuTimeFiltering() {
+        int option;
+
+        do {
+            cleanScreen();
+            System.out.println("Ingrese el periodo de búsqueda: ");
+            System.out.println("   1. Por mes.");
+            System.out.println("   2. Por año.");
+            System.out.println("   3. Por fecha de inicio y fin.");
+            System.out.println("   4. Ir al menú anterior.");
+            option = scanner.nextInt();
+
+            switch (option) {
+                case 1 -> expenseDAO.findExpenseByMonth();
+                case 2 -> expenseDAO.findExpenseByYear();
+                case 3 -> expenseDAO.showExpenseByDates();
+                case 4 -> System.out.println();
+                default -> System.out.println("La opción ingresada no es válida");
+            }
+        } while (option != 4);
+    }
+
 }

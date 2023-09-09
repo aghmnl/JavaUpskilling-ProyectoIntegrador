@@ -5,10 +5,8 @@ package entities;
 import dao.impl.CategoryDAOImpl;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Scanner;
 
-import static utils.Menu.expenses;
 
 public class Expense {
     private int id;

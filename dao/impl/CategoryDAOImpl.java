@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import static common.ListMethods.printList;
 import static config.JDBCConfig.getDBConnection;
 import static utils.ScreenMethods.cleanScreen;
 
@@ -119,11 +120,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public void showAll() {
-        int i = 1;
-        for (CategoryDTO category : allCategoriesDTO) {
-            System.out.println(i + ". " + category.getCategoryName());
-            i++;
-        }
+        printList(allCategoriesDTO);
     }
 
     @Override

@@ -6,20 +6,19 @@ import dao.dto.ExpenseDTO;
 import entities.Expense;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import static common.ListMethods.printList;
 import static config.JDBCConfig.getDBConnection;
-import static utils.Menu.dateFormat;
-import static utils.Menu.expenses;
 import static utils.ScreenMethods.cleanScreen;
 
 public class ExpenseDAOImpl implements ExpenseDAO {
     CategoryDAO categoryDAO = new CategoryDAOImpl();
     private List<ExpenseDTO> allExpensesDTO = getAll();
     Scanner scanner = new Scanner(System.in);
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     //Convierte un resultSet con un único registro de gasto en Expense
     private Expense resultSetToExpense(ResultSet expense) {
@@ -72,6 +71,15 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             }
         } while (!dateIsCorrect);
         return date;
+    }
+    
+    private TreeSet<String> getMonths () {
+        TreeSet<String> months = new TreeSet<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM");
+        for (ExpenseDTO expenses :  allExpensesDTO) {
+            months.add(sdf.format(expenses.getDate()));
+        }
+        return months;
     }
 
     @Override
@@ -193,23 +201,31 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         List<ExpenseDTO> filteredExpenses = allExpensesDTO.stream().
                 filter(e -> Objects.equals(e.getCategory(), categorySelected)).
                 toList();
-        int i = 0;
-        for (ExpenseDTO e : filteredExpenses) {
-            System.out.println(++i + ". " + e);
-        }
+        printList(filteredExpenses);
     }
 
     @Override
-    public void showExpenseByTime() {
+    public void findExpenseByMonth() {
+        System.out.println(getMonths());
+    }
+
+    @Override
+    public void findExpenseByYear() {
 
     }
+
+    @Override
+    public void showExpenseByDates() {
+
+    }
+
 
     public void  findExpenseByDescription() {
         System.out.print("Por favor ingresar el texto a buscar en la descripción: ");
         String textToBeFound = scanner.next();
         int i = 0;
         boolean textFound = false;
-        for(Expense expense : expenses) {
+        for(ExpenseDTO expense : allExpensesDTO) {
             if(expense.getDescription().contains(textToBeFound)) { System.out.println((i + 1) + ". " + expense); textFound = true;}
             i++;
         }
@@ -221,7 +237,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         int amountToBeFound = scanner.nextInt();
         int i = 0;
         boolean amountFound = false;
-        for(Expense expense : expenses) {
+        for(ExpenseDTO expense : allExpensesDTO) {
             if(expense.getAmount() == amountToBeFound) { System.out.println((i + 1) + ". " + expense); amountFound = true;}
             i++;
         }
@@ -231,7 +247,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         String categoryToBeFound = categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: ");
         int i = 0;
         boolean categoryFound = false;
-        for(Expense expense : expenses) {
+        for(ExpenseDTO expense : allExpensesDTO) {
             if(Objects.equals(expense.getCategory(), categoryToBeFound)) { System.out.println((i + 1) + ". " + expense); categoryFound = true; }
             i++;
         }
@@ -240,17 +256,17 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     }
     public void findExpenseByDate(){}
     public void  findExpenseByID(){
-        int ID;
+        int id;
         boolean IDIsCorrect;
         do {
             System.out.print("Ingrese el ID del gasto a buscar: ");
-            ID = scanner.nextInt();
-            IDIsCorrect = (ID > 0) & (ID <= expenses.size());
+            id = scanner.nextInt();
+            IDIsCorrect = (id > 0) & (id <= allExpensesDTO.size());
             if (!IDIsCorrect) {
                 System.out.println("El ID ingresado es incorrecto.");
             }
         } while (!IDIsCorrect);
 
-        System.out.println(expenses.get(ID-1));
+        System.out.println(allExpensesDTO.get(id-1));
     }
 }

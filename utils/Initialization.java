@@ -7,19 +7,20 @@ import dao.dto.ExpenseDTO;
 import dao.impl.CategoryDAOImpl;
 import dao.impl.ExpenseDAOImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static utils.Menu.dateFormat;
 
 public class Initialization {
 
 
     public static void initializeExpenses() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
         ExpenseDAO expenses = new ExpenseDAOImpl();
-        Date date1 = null;
-        Date date2 = null;
-        Date date3 = null;
-        Date date4 = null;
+        Date date1 = new Date();
+        Date date2 = new Date();
+        Date date3 = new Date();
+        Date date4 = new Date();
         try {
             date1 = dateFormat.parse("10-09-2023");
             date2 = dateFormat.parse("23-07-2023");

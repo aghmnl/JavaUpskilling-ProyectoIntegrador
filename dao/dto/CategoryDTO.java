@@ -15,4 +15,9 @@ public class CategoryDTO {
         this.categoryName = categoryName;
     }
 
+    @Override
+    public String toString() {
+        return this.categoryName;
+    }
+
 }

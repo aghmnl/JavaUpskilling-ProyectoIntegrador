@@ -8,7 +8,9 @@ public interface ExpenseDAO extends CRUD<ExpenseDTO>{
     void editExpense();
     void  deleteExpense();
     void showExpenseByCategory();
-    void showExpenseByTime();
+    void findExpenseByMonth();
+    void findExpenseByYear();
+    void showExpenseByDates();
     void findExpenseByID();
     void findExpenseByDescription();
     void findExpenseByAmount();
