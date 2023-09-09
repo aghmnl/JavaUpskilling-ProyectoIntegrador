@@ -1,3 +1,4 @@
+/* By Agus */
 package dao.dto;
 
 import java.text.SimpleDateFormat;

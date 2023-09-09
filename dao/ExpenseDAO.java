@@ -1,15 +1,15 @@
+/* By Agus */
 package dao;
 
 import dao.dto.ExpenseDTO;
 
 public interface ExpenseDAO extends CRUD<ExpenseDTO>{
-    String selectExpense(String message);
+    ExpenseDTO selectExpense(String message);
     void addExpense();
     void editExpense();
     void  deleteExpense();
     void showExpenseByCategory();
-    void findExpenseByMonth();
-    void findExpenseByYear();
+    void findExpenseByPeriod(String period);
     void showExpenseByDates();
     void findExpenseByID();
     void findExpenseByDescription();

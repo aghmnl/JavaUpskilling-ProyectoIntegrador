@@ -1,3 +1,4 @@
+/* By Agus */
 package dao.impl;
 
 import dao.CategoryDAO;
@@ -9,7 +10,9 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static common.ListMethods.printList;
+import static common.DateMethods.enterDate;
+import static common.ListMethods.*;
+import static common.ListMethods.selectFromList;
 import static config.JDBCConfig.getDBConnection;
 import static utils.ScreenMethods.cleanScreen;
 
@@ -17,8 +20,6 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     CategoryDAO categoryDAO = new CategoryDAOImpl();
     private List<ExpenseDTO> allExpensesDTO = getAll();
     Scanner scanner = new Scanner(System.in);
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     //Convierte un resultSet con un único registro de gasto en Expense
     private Expense resultSetToExpense(ResultSet expense) {
@@ -56,30 +57,15 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         return newListExpenses;
     }
 
-    private java.util.Date enterDate() {
-        boolean dateIsCorrect = false;
-        java.util.Date date = new java.util.Date();
-        do {
-            System.out.print("Ingrese la fecha en el formato dd-mm-aaaa: ");
-            String dateString = scanner.next();
-            try {
-                date = dateFormat.parse(dateString);
-                dateIsCorrect = true;
-            } catch (Exception e) {
-                cleanScreen();
-                System.out.println("El formato de la fecha es incorrecto.");
-            }
-        } while (!dateIsCorrect);
-        return date;
-    }
-    
-    private TreeSet<String> getMonths () {
+
+
+    // Devuelve todos los meses en los que hay gastos
+    private List<String> getMonths (SimpleDateFormat sdf) {
         TreeSet<String> months = new TreeSet<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM");
         for (ExpenseDTO expenses :  allExpensesDTO) {
             months.add(sdf.format(expenses.getDate()));
         }
-        return months;
+        return new ArrayList<>(months); // Acá convierto el TreeSet<String> en ArrayList<String>
     }
 
     @Override
@@ -164,8 +150,9 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     }
 
     @Override
-    public String selectExpense(String message) {
-        return null;
+    public ExpenseDTO selectExpense(String message) {
+        int expenseNumber = selectFromList(allExpensesDTO, message);
+        return allExpensesDTO.get(expenseNumber - 1);
     }
 
     @Override
@@ -205,14 +192,15 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     }
 
     @Override
-    public void findExpenseByMonth() {
-        System.out.println("Elija el mes ");
-        printList(getMonths());
-    }
-
-    @Override
-    public void findExpenseByYear() {
-
+    public void findExpenseByPeriod(String period) {
+        SimpleDateFormat sdf = new SimpleDateFormat(period);
+        List<String> periodList = getMonths(sdf);
+        String periodSelected = selectTFromList(periodList,  "Seleccione la opción deseada para filtrar los gastos:");
+        System.out.println("El período elegido es: " + periodSelected);
+        List<ExpenseDTO> filteredExpenses = allExpensesDTO.stream().
+                filter(e -> sdf.format(e.getDate()).equals(periodSelected)).
+                toList();
+        printList(filteredExpenses);
     }
 
     @Override

@@ -1,3 +1,4 @@
+/* By Agus */
 package entities;
 
 public class Category {

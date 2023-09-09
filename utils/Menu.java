@@ -1,5 +1,4 @@
 /* By Agus */
-
 package utils;
 
 import dao.CategoryDAO;
@@ -43,6 +42,7 @@ public class Menu {
                 case 5 -> submenuManageExpenses();
                 case 6 -> submenuManageCategories();
                 case 7 -> {
+                    System.out.println();
                     System.out.println("Gracias por utilizar el gestor de gastos!!");
                     System.out.println("Made by Agus.");
                 }
@@ -121,8 +121,8 @@ public class Menu {
             option = scanner.nextInt();
 
             switch (option) {
-                case 1 -> expenseDAO.findExpenseByMonth();
-                case 2 -> expenseDAO.findExpenseByYear();
+                case 1 -> expenseDAO.findExpenseByPeriod("MM");
+                case 2 -> expenseDAO.findExpenseByPeriod("YYYY");
                 case 3 -> expenseDAO.showExpenseByDates();
                 case 4 -> System.out.println();
                 default -> System.out.println("La opción ingresada no es válida");

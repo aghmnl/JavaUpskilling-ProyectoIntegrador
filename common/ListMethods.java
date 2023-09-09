@@ -1,8 +1,8 @@
+/* By Agus */
 package common;
 
-import dao.CRUD;
-
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 import static utils.ScreenMethods.cleanScreen;
@@ -16,16 +16,16 @@ public class ListMethods {
         }
     }
 
-    public static <T> int selectFromList(int listSize, String message, CRUD object) {
+    public static <T> int selectFromList(List<T> list, String message) {
         Scanner scanner = new Scanner(System.in);
         boolean selectionIsCorrect = false;
         int optionSelected;
 
         do {
             System.out.println(message);
-            object.showAll();
+            printList(list);
             optionSelected = scanner.nextInt();
-            if ((optionSelected < 1) || (optionSelected > listSize)) {
+            if ((optionSelected < 1) || (optionSelected > list.size())) {
                 cleanScreen();
                 System.out.println("La opción seleccionada es incorrecta.");
             } else {
@@ -34,7 +34,10 @@ public class ListMethods {
         } while(!selectionIsCorrect);
 
         return optionSelected;
-        }
+    }
 
-
+    public static <T> T selectTFromList(List<T> listT, String message) {
+        int optionSelected = selectFromList(listT, message);
+        return listT.get(optionSelected - 1);
+    }
 }

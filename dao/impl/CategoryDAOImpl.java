@@ -1,3 +1,4 @@
+/* By Agus */
 package dao.impl;
 
 import dao.CategoryDAO;
@@ -10,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static common.ListMethods.printList;
-import static common.ListMethods.selectFromList;
+import static common.ListMethods.*;
 import static config.JDBCConfig.getDBConnection;
 
 public class CategoryDAOImpl implements CategoryDAO {
@@ -232,18 +232,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     public String selectCategory(String message) {
-        int categoryNumber = selectFromList(allCategoriesDTO.size(), message, new CategoryDAOImpl());
-//        do {
-//            System.out.println(message);
-//            showAll();
-//            categoryNumber = scanner.nextInt();
-//            if ((categoryNumber < 1) || (categoryNumber > allCategoriesDTO.size())) {
-//                cleanScreen();
-//                System.out.println("La categoría seleccionada es incorrecta.");
-//            } else {
-//                categoryIsCorrect = true;
-//            }
-//        } while(!categoryIsCorrect);
+        int categoryNumber = selectFromList(allCategoriesDTO, message);
         return allCategoriesDTO.get(categoryNumber - 1).getCategoryName();
     }
 
@@ -255,8 +244,8 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     public void editCategory() {
-        String categorySelected = selectCategory("Seleccione de la lista la categoría a modificar: ");
-        System.out.println("Categoría elegida: " + categorySelected);
+        String categorySelected = selectTFromList(allCategoriesDTO, "Seleccione de la lista la categoría a modificar: ").getCategoryName();
+        System.out.println("La categoría elegida es: " + categorySelected);
         System.out.print("Ingrese el nuevo texto: ");
         String newCategory = scanner.next();
         int newId = getCategoryId(categorySelected);
@@ -264,7 +253,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     public void deleteCategory() {
-        String categorySelected = selectCategory("Seleccione de la lista la categoría a eliminar: ");
+        String categorySelected = selectTFromList(allCategoriesDTO, "Seleccione de la lista la categoría a eliminar: ").getCategoryName();
         System.out.println("Está seguro que desea eliminar la categoría " + categorySelected + "? (S/N)");
         String opcionElegida = scanner.next().toUpperCase();
         while (!Objects.equals(opcionElegida, "S") && !Objects.equals(opcionElegida, "N")) {

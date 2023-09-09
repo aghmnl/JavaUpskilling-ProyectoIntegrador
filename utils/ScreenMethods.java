@@ -1,5 +1,4 @@
 /* By Agus */
-
 package utils;
 
 public class ScreenMethods {

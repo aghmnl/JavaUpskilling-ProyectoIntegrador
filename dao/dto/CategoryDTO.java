@@ -1,3 +1,4 @@
+/* By Agus */
 package dao.dto;
 
 public class CategoryDTO {

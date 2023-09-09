@@ -1,5 +1,4 @@
 /* By Agus */
-
 package entities;
 
 import dao.impl.CategoryDAOImpl;
