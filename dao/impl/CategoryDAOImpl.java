@@ -16,6 +16,7 @@ import static utils.ScreenMethods.cleanScreen;
 public class CategoryDAOImpl implements CategoryDAO {
 
     private List<CategoryDTO> allCategoriesDTO = getAll();
+    Scanner scanner = new Scanner(System.in);
 
     //Convierte un resultSet con un único registro de categoría en Category
     private Category resultSetToCategory(ResultSet category) {
@@ -234,13 +235,11 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     public String selectCategory(String message) {
-        Scanner scanner = new Scanner(System.in);
         boolean categoryIsCorrect = false;
         int categoryNumber;
-        CategoryDAO categoryDAO = new CategoryDAOImpl();
         do {
             System.out.println(message);
-            categoryDAO.showAll();
+            showAll();
             categoryNumber = scanner.nextInt();
             if ((categoryNumber < 1) || (categoryNumber > allCategoriesDTO.size())) {
                 cleanScreen();
@@ -253,11 +252,9 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     public void addCategory() {
-        Scanner scanner = new Scanner(System.in);
-        CategoryDAO categoryDAO = new CategoryDAOImpl();
         System.out.print("Ingrese la nueva categoría: ");
         String newCategory = scanner.next();
-        System.out.println(categoryDAO.add(new CategoryDTO(newCategory)));
+        System.out.println(add(new CategoryDTO(newCategory)));
         System.out.println();
     }
 
@@ -265,16 +262,13 @@ public class CategoryDAOImpl implements CategoryDAO {
         String categorySelected = selectCategory("Seleccione de la lista la categoría a modificar: ");
         System.out.println("Categoría elegida: " + categorySelected);
         System.out.print("Ingrese el nuevo texto: ");
-        Scanner scanner = new Scanner(System.in);
         String newCategory = scanner.next();
         int newId = getCategoryId(categorySelected);
-        CategoryDAO categoryDAO = new CategoryDAOImpl();
-        categoryDAO.update(new CategoryDTO(newCategory), newId);
+        update(new CategoryDTO(newCategory), newId);
     }
 
     public void deleteCategory() {
         String categorySelected = selectCategory("Seleccione de la lista la categoría a eliminar: ");
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Está seguro que desea eliminar la categoría " + categorySelected + "? (S/N)");
         String opcionElegida = scanner.next().toUpperCase();
         while (!Objects.equals(opcionElegida, "S") && !Objects.equals(opcionElegida, "N")) {
@@ -282,8 +276,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             opcionElegida = scanner.next().toUpperCase();
         };
         if(opcionElegida.equals("S")) {
-            CategoryDAO categoryDAO = new CategoryDAOImpl();
-            categoryDAO.delete(getCategoryId(categorySelected));
+            delete(getCategoryId(categorySelected));
         } else {
             System.out.println("La categoría no fue eliminada");
         }

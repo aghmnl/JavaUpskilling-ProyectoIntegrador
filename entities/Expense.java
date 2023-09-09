@@ -5,13 +5,10 @@ package entities;
 import dao.impl.CategoryDAOImpl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static utils.Menu.dateFormat;
 import static utils.Menu.expenses;
-import static utils.ScreenMethods.cleanScreen;
 
 public class Expense {
     private int id;
@@ -73,77 +70,9 @@ public class Expense {
 
 
 
-    public static Date enterDate() {
-        boolean dateIsCorrect = false;
-        Date date = new Date();
-        do {
-            System.out.print("Ingrese la fecha en el formato dd-mm-aaaa: ");
-            String dateString = scanner.next();
-            try {
-                date = dateFormat.parse(dateString);
-                dateIsCorrect = true;
-            } catch (Exception e) {
-                cleanScreen();
-                System.out.println("El formato de la fecha es incorrecto.");
-            }
-        } while (!dateIsCorrect);
-        return date;
-    }
 
 
-    public static void  findExpenseByDescription() {
-        System.out.print("Por favor ingresar el texto a buscar en la descripción: ");
-        String textToBeFound = scanner.next();
-        int i = 0;
-        boolean textFound = false;
-        for(Expense expense : expenses) {
-            if(expense.description.contains(textToBeFound)) { System.out.println((i + 1) + ". " + expense); textFound = true;}
-            i++;
-        }
-        if(!textFound) System.out.println("No se encontró ningún gasto con esa descripción.");
 
-    }
-    public static void findExpenseByAmount() {
-        System.out.print("Por favor ingresar el monto a buscar: ");
-        int amountToBeFound = scanner.nextInt();
-        int i = 0;
-        boolean amountFound = false;
-        for(Expense expense : expenses) {
-            if(expense.amount == amountToBeFound) { System.out.println((i + 1) + ". " + expense); amountFound = true;}
-            i++;
-        }
-        if(!amountFound) System.out.println("No se encontró ningún gasto con ese monto.");
-    }
-    public void findExpenseByCategory(){
-        String categoryToBeFound = categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: ");
-        int i = 0;
-        boolean categoryFound = false;
-        for(Expense expense : expenses) {
-            if(Objects.equals(expense.category, categoryToBeFound)) { System.out.println((i + 1) + ". " + expense); categoryFound = true; }
-            i++;
-        }
-        if(!categoryFound) System.out.println("No se encontró ningún gasto en la categoría seleccionada.");
 
-    }
-    public static void findExpenseByDate(){}
-    public static void  findExpenseByID(){
-        int ID;
-        boolean IDIsCorrect;
-        do {
-            System.out.print("Ingrese el ID del gasto a buscar: ");
-            ID = scanner.nextInt();
-            IDIsCorrect = (ID > 0) & (ID <= expenses.size());
-            if (!IDIsCorrect) {
-                System.out.println("El ID ingresado es incorrecto.");
-            }
-        } while (!IDIsCorrect);
-
-        System.out.println(expenses.get(ID-1));
-    }
-    public static void  listExpenses(List<Expense> expenses){
-        for (int i = 0; i < expenses.size(); i++) {
-            System.out.println((i + 1) + ". " + expenses.get(i));
-        }
-    }
 
 }
