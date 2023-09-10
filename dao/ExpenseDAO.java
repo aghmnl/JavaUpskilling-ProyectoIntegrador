@@ -11,8 +11,7 @@ public interface ExpenseDAO extends CRUD<ExpenseDTO>{
     void showExpenseByCategory();
     void findExpenseByPeriod(String period);
     void showExpenseByDates();
-    void findExpenseByID();
+    void showExpenseByDate();
     void findExpenseByDescription();
     void findExpenseByAmount();
-    void findExpenseByDate();
 }

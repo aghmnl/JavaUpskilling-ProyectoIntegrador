@@ -215,6 +215,16 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         printList(filteredExpenses);
     }
 
+    @Override
+    public void showExpenseByDate() {
+        java.util.Date selectedDate = enterDate("Ingrese la fecha en el formato dd-mm-aaaa: ");
+        System.out.println("Los gastos en la fecha " + dateFormat.format(selectedDate) + " son los siguientes: ");
+        List<ExpenseDTO> filteredExpenses = allExpensesDTO.stream().
+                filter(e -> dateFormat.format(e.getDate()).equals(dateFormat.format(selectedDate)) ) // Acá agrego un día al endDate para que el filtrado sea inclusive
+                .toList();
+        printList(filteredExpenses);
+    }
+
 
     public void  findExpenseByDescription() {
         System.out.print("Por favor ingresar el texto a buscar en la descripción: ");
@@ -239,30 +249,5 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         }
         if(!amountFound) System.out.println("No se encontró ningún gasto con ese monto.");
     }
-    public void findExpenseByCategory(){
-        String categoryToBeFound = categoryDAO.selectCategory("Seleccione la categoría entre las siguientes opciones: ");
-        int i = 0;
-        boolean categoryFound = false;
-        for(ExpenseDTO expense : allExpensesDTO) {
-            if(Objects.equals(expense.getCategory(), categoryToBeFound)) { System.out.println((i + 1) + ". " + expense); categoryFound = true; }
-            i++;
-        }
-        if(!categoryFound) System.out.println("No se encontró ningún gasto en la categoría seleccionada.");
 
-    }
-    public void findExpenseByDate(){}
-    public void  findExpenseByID(){
-        int id;
-        boolean IDIsCorrect;
-        do {
-            System.out.print("Ingrese el ID del gasto a buscar: ");
-            id = scanner.nextInt();
-            IDIsCorrect = (id > 0) & (id <= allExpensesDTO.size());
-            if (!IDIsCorrect) {
-                System.out.println("El ID ingresado es incorrecto.");
-            }
-        } while (!IDIsCorrect);
-
-        System.out.println(allExpensesDTO.get(id-1));
-    }
 }

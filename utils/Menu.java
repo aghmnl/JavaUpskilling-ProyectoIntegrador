@@ -62,22 +62,20 @@ public class Menu {
             System.out.println("   2. Por monto.");
             System.out.println("   3. Por categoría.");
             System.out.println("   4. Por fecha.");
-            System.out.println("   5. Por ID.");
-            System.out.println("   6. Listar todos los gastos.");
-            System.out.println("   7. Ir al menú anterior.");
+            System.out.println("   5. Listar todos los gastos.");
+            System.out.println("   6. Ir al menú anterior.");
             option = scanner.nextInt();
 
             switch (option) {
                 case 1 -> expenseDAO.findExpenseByDescription();
                 case 2 -> expenseDAO.findExpenseByAmount();
                 case 3 -> expenseDAO.showExpenseByCategory();
-                case 4 -> expenseDAO.findExpenseByDate();
-                case 5 -> expenseDAO.findExpenseByID();
-                case 6 -> expenseDAO.showAll();
-                case 7 -> System.out.println();
+                case 4 -> expenseDAO.showExpenseByDate();
+                case 5 -> expenseDAO.showAll();
+                case 6 -> System.out.println();
                 default -> System.out.println("La opción ingresada no es válida");
             }
-        } while (option != 7);
+        } while (option != 6);
     }
 
 
@@ -115,17 +113,19 @@ public class Menu {
             System.out.println("   1. Por mes.");
             System.out.println("   2. Por año.");
             System.out.println("   3. Por fecha de inicio y fin.");
-            System.out.println("   4. Ir al menú anterior.");
+            System.out.println("   4. Por fecha específica.");
+            System.out.println("   5. Ir al menú anterior.");
             option = scanner.nextInt();
 
             switch (option) {
                 case 1 -> expenseDAO.findExpenseByPeriod("MM");
                 case 2 -> expenseDAO.findExpenseByPeriod("YYYY");
                 case 3 -> expenseDAO.showExpenseByDates();
-                case 4 -> System.out.println();
+                case 4 -> expenseDAO.showExpenseByDate();
+                case 5 -> System.out.println();
                 default -> System.out.println("La opción ingresada no es válida");
             }
-        } while (option != 4);
+        } while (option != 5);
     }
 
 }
