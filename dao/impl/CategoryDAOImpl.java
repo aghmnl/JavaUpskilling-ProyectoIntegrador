@@ -66,7 +66,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
 
     // Dado el nombre de una categoría, lo busca en la lista y devuelve su índice
-    private int getCategoryId(String categoryName) {
+    public int getId(CategoryDTO categoryDTO) {
         try {
             // Establecer la conexión
             Connection connection = getDBConnection();
@@ -78,7 +78,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             PreparedStatement statement = connection.prepareStatement(getCategorySQL);
 
             // Establecer los valores en el PreparedStatement
-            statement.setString(1, categoryName);
+            statement.setString(1, categoryDTO.getCategoryName());
 
             // Ejecuta la consulta
             ResultSet categoryFound = statement.executeQuery();
@@ -89,10 +89,11 @@ public class CategoryDAOImpl implements CategoryDAO {
             return (categoryFound.getInt("id"));
 
         } catch (SQLException e) {
-            System.out.println("No se pudieron encontrar todas las categorías");
+            System.out.println("No se pudieron encontrar las categorías");
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public List<CategoryDTO> getAll() {
@@ -113,15 +114,13 @@ public class CategoryDAOImpl implements CategoryDAO {
             return resultSetToCategoryDTOList(allCategories);
 
         } catch (SQLException e) {
-            System.out.println("No se pudieron encontrar todas las categorías");
+            System.out.println("No se pudieron encontrar las categorías");
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void showAll() {
-        printList(allCategoriesDTO);
-    }
+    public void showAll() { printList(allCategoriesDTO); }
 
     @Override
     public String add(CategoryDTO categoryDTO) {
@@ -248,8 +247,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         System.out.println("La categoría elegida es: " + categorySelected);
         System.out.print("Ingrese el nuevo texto: ");
         String newCategory = scanner.next();
-        int newId = getCategoryId(categorySelected);
-        update(new CategoryDTO(newCategory), newId);
+        update(new CategoryDTO(newCategory), getId(new CategoryDTO(categorySelected)));
     }
 
     public void deleteCategory() {
@@ -261,7 +259,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             opcionElegida = scanner.next().toUpperCase();
         }
         if(opcionElegida.equals("S")) {
-            delete(getCategoryId(categorySelected));
+            delete(getId(new CategoryDTO(categorySelected)));
         } else {
             System.out.println("La categoría no fue eliminada");
         }

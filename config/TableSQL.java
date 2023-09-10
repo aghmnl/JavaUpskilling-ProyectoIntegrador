@@ -17,8 +17,8 @@ public class TableSQL {
             // Get the database metadata
             DatabaseMetaData databaseMetaData = connection.getMetaData();
 
-            // Comprueba la existencia de la tabla
-            ResultSet rs = databaseMetaData.getTables(null, null, "GASTOS", null);
+            // Comprueba la existencia de la tabla. El nombre de la misma debe estar en MAYÚSCULAS para detectarla correctamente en SQL
+            ResultSet rs = databaseMetaData.getTables(null, null, tableName, null);
 
             // Devuelve el resultado de la query
             return !rs.next();

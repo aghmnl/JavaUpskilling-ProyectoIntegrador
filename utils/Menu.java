@@ -16,6 +16,7 @@ public class Menu {
 
     static Scanner scanner = new Scanner(System.in); // Esto es para que el usuario pueda ingresar la información por consola
 
+
     public void optionsMenu() {
 
         int option;
@@ -27,59 +28,33 @@ public class Menu {
             if(!expenseDAO.getAll().isEmpty()) System.out.println("   2. Ver todos los gastos.");
             if(!expenseDAO.getAll().isEmpty()) System.out.println("   3. Ver gastos por categoría.");
             if(!expenseDAO.getAll().isEmpty()) System.out.println("   4. Ver gastos por período.");
-            if(!expenseDAO.getAll().isEmpty()) System.out.println("   5. Gestionar gastos.");
-            if(!categoryDAO.getAll().isEmpty()) System.out.println("   6. Gestionar categorías.");
-            System.out.println("   7. Salir de la aplicación.");
+            if(!expenseDAO.getAll().isEmpty()) System.out.println("   5. Editar gasto.");
+            if(!expenseDAO.getAll().isEmpty()) System.out.println("   6. Eliminar gasto.");
+            if(!categoryDAO.getAll().isEmpty()) System.out.println("   7. Gestionar categorías.");
+            System.out.println("   8. Salir de la aplicación.");
             option = scanner.nextInt();
 
             switch (option) {
                 case 1 -> expenseDAO.addExpense();
                 case 2 -> expenseDAO.showAll();
-                case 3 -> expenseDAO.showExpenseByCategory();
+                case 3 -> expenseDAO.findExpensesByCategory();
                 case 4 -> submenuTimeFiltering();
-                case 5 -> submenuManageExpenses();
-                case 6 -> submenuManageCategories();
-                case 7 -> {
+                case 5 -> expenseDAO.editExpense();
+                case 6 -> expenseDAO.deleteExpense();
+                case 7 -> submenuEditCategory();
+                case 8 -> {
                     System.out.println();
                     System.out.println("Gracias por utilizar el gestor de gastos!!");
                     System.out.println("Made by Agus.");
                 }
                 default -> { cleanScreen(); System.out.println("La opción ingresada no es válida");}
             }
-        } while (option != 7);
+        } while (option != 8);
 
         scanner.close();   // This is to close the scanner. It should only be done at the very end of the code.
     }
 
-
-    private void submenuManageExpenses() {
-        int option;
-
-        do {
-            cleanScreen();
-            System.out.println("Ingrese el método de búsqueda: ");
-            System.out.println("   1. Por descripción.");
-            System.out.println("   2. Por monto.");
-            System.out.println("   3. Por categoría.");
-            System.out.println("   4. Por fecha.");
-            System.out.println("   5. Listar todos los gastos.");
-            System.out.println("   6. Ir al menú anterior.");
-            option = scanner.nextInt();
-
-            switch (option) {
-                case 1 -> expenseDAO.findExpenseByDescription();
-                case 2 -> expenseDAO.findExpenseByAmount();
-                case 3 -> expenseDAO.showExpenseByCategory();
-                case 4 -> expenseDAO.showExpenseByDate();
-                case 5 -> expenseDAO.showAll();
-                case 6 -> System.out.println();
-                default -> System.out.println("La opción ingresada no es válida");
-            }
-        } while (option != 6);
-    }
-
-
-    private void submenuManageCategories() {
+    private void submenuEditCategory() {
         int option;
 
         do {
@@ -118,10 +93,10 @@ public class Menu {
             option = scanner.nextInt();
 
             switch (option) {
-                case 1 -> expenseDAO.findExpenseByPeriod("MM");
-                case 2 -> expenseDAO.findExpenseByPeriod("YYYY");
-                case 3 -> expenseDAO.showExpenseByDates();
-                case 4 -> expenseDAO.showExpenseByDate();
+                case 1 -> expenseDAO.showExpensesByPeriod("MM");
+                case 2 -> expenseDAO.showExpensesByPeriod("YYYY");
+                case 3 -> expenseDAO.showExpensesByDates();
+                case 4 -> expenseDAO.findExpensesByDate();
                 case 5 -> System.out.println();
                 default -> System.out.println("La opción ingresada no es válida");
             }

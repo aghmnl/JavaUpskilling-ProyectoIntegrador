@@ -18,6 +18,9 @@ public class ExpenseDTO {
         this.date = date;
     }
 
+    public ExpenseDTO() {
+    }
+
     public float getAmount() {
         return amount;
     }
