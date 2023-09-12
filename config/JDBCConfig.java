@@ -13,7 +13,7 @@ public class JDBCConfig {
     private static final String DB_PASSWORD = "";
 
     public static Connection getDBConnection() {
-        Connection connection = null;
+        Connection connection;
 
         try {
             Class.forName(DB_DRIVER);

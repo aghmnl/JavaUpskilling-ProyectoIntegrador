@@ -3,7 +3,6 @@ package common;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
 
 import static common.ScreenMethods.cleanScreen;
 import static common.ScreenMethods.enterNumber;
@@ -18,7 +17,6 @@ public class ListMethods {
     }
 
     public static <T> int selectFromList(List<T> list, String message) {
-        Scanner scanner = new Scanner(System.in);
         boolean selectionIsCorrect = false;
         int optionSelected;
 

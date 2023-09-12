@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static common.ListMethods.*;
+import static common.ScreenMethods.enterYorN;
 import static config.JDBCConfig.getDBConnection;
 
 public class CategoryDAOImpl implements CategoryDAO {
@@ -253,11 +254,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     public void deleteCategory() {
         String categorySelected = selectTFromList(allCategoriesDTO, "Seleccione de la lista la categoría a eliminar: ").getCategoryName();
         System.out.println("Está seguro que desea eliminar la categoría " + categorySelected + "? (S/N)");
-        String opcionElegida = scanner.next().toUpperCase();
-        while (!Objects.equals(opcionElegida, "S") && !Objects.equals(opcionElegida, "N")) {
-            System.out.println("Respuesta incorrecta, por favor elegir entre S (Sí) y N (No)");
-            opcionElegida = scanner.next().toUpperCase();
-        }
+        String opcionElegida = enterYorN();
         if(opcionElegida.equals("S")) {
             delete(getId(new CategoryDTO(categorySelected)));
         } else {
