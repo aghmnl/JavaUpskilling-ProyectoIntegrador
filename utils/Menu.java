@@ -8,11 +8,13 @@ import dao.impl.ExpenseDAOImpl;
 
 import java.util.Scanner;
 
-import static utils.ScreenMethods.cleanScreen;
+import static common.ScreenMethods.cleanScreen;
+import static common.ScreenMethods.enterNumber;
 
 public class Menu {
     ExpenseDAO expenseDAO = new ExpenseDAOImpl();
     CategoryDAO categoryDAO = new CategoryDAOImpl();
+
 
     static Scanner scanner = new Scanner(System.in); // Esto es para que el usuario pueda ingresar la información por consola
 
@@ -32,7 +34,7 @@ public class Menu {
             if(!expenseDAO.getAll().isEmpty()) System.out.println("   6. Eliminar gasto.");
             if(!categoryDAO.getAll().isEmpty()) System.out.println("   7. Gestionar categorías.");
             System.out.println("   8. Salir de la aplicación.");
-            option = scanner.nextInt();
+            option = enterNumber();
 
             switch (option) {
                 case 1 -> expenseDAO.addExpense();
@@ -65,7 +67,7 @@ public class Menu {
             System.out.println("   3. Modificar categoría.");
             System.out.println("   4. Eliminar categoría.");
             System.out.println("   5. Ir al menú anterior.");
-            option = scanner.nextInt();
+            option = enterNumber();
 
             switch (option) {
                 case 1 -> categoryDAO.showAll();
@@ -90,7 +92,7 @@ public class Menu {
             System.out.println("   3. Por fecha de inicio y fin.");
             System.out.println("   4. Por fecha específica.");
             System.out.println("   5. Ir al menú anterior.");
-            option = scanner.nextInt();
+            option = enterNumber();
 
             switch (option) {
                 case 1 -> expenseDAO.showExpensesByPeriod("MM");

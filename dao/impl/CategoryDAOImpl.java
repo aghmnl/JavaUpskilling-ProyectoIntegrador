@@ -225,7 +225,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("La categoría no pudo ser eliminada");
+            System.out.println("El registro no pudo ser eliminado");
             throw new RuntimeException(e);
         }
     }

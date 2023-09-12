@@ -4,14 +4,13 @@ package common;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-import static utils.ScreenMethods.cleanScreen;
+import static common.ScreenMethods.cleanScreen;
 
 
 public class DateMethods {
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+    static Scanner scanner = new Scanner(System.in);
     public static java.util.Date enterDate(String message) {
-        Scanner scanner = new Scanner(System.in);
         boolean dateIsCorrect = false;
         java.util.Date date = new java.util.Date();
         do {

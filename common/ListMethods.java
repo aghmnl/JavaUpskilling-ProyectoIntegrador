@@ -5,7 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
-import static utils.ScreenMethods.cleanScreen;
+import static common.ScreenMethods.cleanScreen;
+import static common.ScreenMethods.enterNumber;
 
 public class ListMethods {
     public static <T> void printList(Collection<T> list) {
@@ -24,7 +25,7 @@ public class ListMethods {
         do {
             System.out.println(message);
             printList(list);
-            optionSelected = scanner.nextInt();
+            optionSelected = enterNumber();
             if ((optionSelected < 1) || (optionSelected > list.size())) {
                 cleanScreen();
                 System.out.println("La opción seleccionada es incorrecta.");

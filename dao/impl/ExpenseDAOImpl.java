@@ -14,8 +14,9 @@ import static common.DateMethods.dateFormat;
 import static common.DateMethods.enterDate;
 import static common.ListMethods.printList;
 import static common.ListMethods.selectTFromList;
+import static common.ScreenMethods.enterNumber;
 import static config.JDBCConfig.getDBConnection;
-import static utils.ScreenMethods.cleanScreen;
+import static common.ScreenMethods.cleanScreen;
 
 public class ExpenseDAOImpl implements ExpenseDAO {
     CategoryDAO categoryDAO = new CategoryDAOImpl();
@@ -158,19 +159,103 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         }
     }
 
-    @Override
     public ExpenseDTO get(int id) {
-        return null;
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Sentencia SQL para obtener un gasto
+            String getExpenseSQL = "SELECT * FROM gastos WHERE id = ?;";
+
+
+            // Realizar operaciones en la base de datos
+            PreparedStatement statement = connection.prepareStatement(getExpenseSQL);
+
+            // Establecer los valores en el PreparedStatement
+            statement.setInt(1, id);
+
+            // Ejecuta la consulta
+            ResultSet selectedExpense = statement.executeQuery();
+
+            // Devuelve el resultado
+            return expenseToExpenseDTO(resultSetToExpense(selectedExpense));
+
+        } catch (SQLException e) {
+            System.out.println("No se pudieron encontrar los gastos");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void update(ExpenseDTO expenseDTO, int id) {
 
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Sentencia SQL para actualizar un gasto según su id
+            String updateExpenseSQL = "UPDATE gastos SET monto = ?, descripción = ?, categoría = ?, fecha = ? WHERE id = ?";
+
+            // Realizar operaciones en la base de datos
+            PreparedStatement statement = connection.prepareStatement(updateExpenseSQL);
+
+            // Establecer los valores en el PreparedStatement
+            statement.setFloat(1, expenseDTO.getAmount());
+            statement.setString(2, expenseDTO.getDescription());
+            statement.setString(3, expenseDTO.getCategory());
+            statement.setDate(4, new java.sql.Date(expenseDTO.getDate().getTime()));
+            statement.setInt(5, id);
+
+            // Ejecutar la actualización
+            int numberOfRows = statement.executeUpdate();
+
+            // Verificar si la actualización fue exitosa
+            if (numberOfRows > 0) {
+                // Actualizo la lista de categorías
+                allExpensesDTO = getAll();
+                System.out.println("El registro se actualizó exitosamente.");
+            } else {
+                System.out.println("No se encontró el registro especificado.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("El registro no pudo ser actualizado");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void delete(int id) {
 
+        try {
+            // Establecer la conexión
+            Connection connection = getDBConnection();
+
+            // Sentencia SQL para actualizar una gasto según su id
+            String deleteExpenseSQL = "DELETE FROM gastos WHERE id = ?";
+
+            // Realizar operaciones en la base de datos
+            PreparedStatement statement = connection.prepareStatement(deleteExpenseSQL);
+
+            // Establecer los valores en el PreparedStatement
+            statement.setInt(1, id);
+
+            // Ejecutar la eliminación
+            int numberOfRows = statement.executeUpdate();
+
+            // Verificar si la eliminación fue exitosa
+            if (numberOfRows > 0) {
+                // Actualizo la lista de categorías
+                allExpensesDTO = getAll();
+                System.out.println("El gasto se eliminó exitosamente.");
+            } else {
+                System.out.println("No se pudo eliminar el gasto.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("El registro no pudo ser eliminado");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -194,9 +279,63 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         System.out.println();
     }
 
+    private String enterNewString(String value) {
+        System.out.println("El valor actual es: " + value);
+        System.out.print("Ingrese el nuevo valor: ");
+        return scanner.next();
+    }
+
+    private float enterNewInt(float value) {
+        System.out.println("El valor actual es: " + value);
+        System.out.print("Ingrese el nuevo valor: ");
+        return scanner.nextFloat();
+    }
+
+    private java.util.Date enterNewDate(java.util.Date value) {
+        System.out.println("El valor actual es: " + dateFormat.format(value));
+        return enterDate("Ingrese el nuevo valor: ");
+    }
+
+    private String enterNewCategory(String category) {
+        System.out.println("El valor actual es: " + category);
+        return categoryDAO.selectCategory("Ingrese el nuevo valor: ");
+    }
+
     @Override
     public void editExpense() {
-        System.out.println("Éste es el id del gasto solicitado: " + getId(submenuManageExpenses()));
+        ExpenseDTO expenseDTO = submenuManageExpenses();
+        if (expenseDTO != null) {
+            int id = getId(expenseDTO);
+            System.out.println("Éste es el gasto seleccionado: " + expenseDTO);
+
+            int option;
+            do {
+                cleanScreen();
+                System.out.println("Ingrese el valor que desea modificar: ");
+                System.out.println("   1. Descripción.");
+                System.out.println("   2. Categoría.");
+                System.out.println("   3. Fecha.");
+                System.out.println("   4. Monto.");
+                System.out.println("   5. Finalizar edición.");
+                option = enterNumber();
+
+                switch (option) {
+                    case 1 -> expenseDTO.setDescription(enterNewString(expenseDTO.getDescription()));
+                    case 2 -> expenseDTO.setCategory(enterNewCategory(expenseDTO.getCategory()));
+                    case 3 -> expenseDTO.setDate(enterNewDate(expenseDTO.getDate()));
+                    case 4 -> expenseDTO.setAmount(enterNewInt(expenseDTO.getAmount()));
+                    case 5 -> System.out.println();
+                    default -> System.out.println("La opción ingresada no es válida");
+                }
+
+                if(option> 0 && option < 5) {
+                    System.out.println("El gasto modificado es el siguiente: " + expenseDTO);
+                }
+
+            } while (option != 5);
+
+            update(expenseDTO, id);
+        }
     }
 
     @Override
@@ -205,28 +344,30 @@ public class ExpenseDAOImpl implements ExpenseDAO {
     }
 
     private ExpenseDTO submenuManageExpenses() {
-        int option = 1;
+        int option;
         ExpenseDTO expenseDTO = new ExpenseDTO();
 
         do {
             cleanScreen();
-            System.out.println("Ingrese el método de búsqueda del gasto a gestionar: ");
+            System.out.println("Ingrese el método de búsqueda del gasto a editar: ");
             System.out.println("   1. Por descripción.");
-            System.out.println("   2. Por monto.");
-            System.out.println("   3. Por categoría.");
-            System.out.println("   4. Por fecha.");
+            System.out.println("   2. Por categoría.");
+            System.out.println("   3. Por fecha.");
+            System.out.println("   4. Por monto.");
             System.out.println("   5. Listar todos los gastos.");
-            option = scanner.nextInt();
+            option = enterNumber();
 
             switch (option) {
                 case 1 -> expenseDTO = selectExpenseByDescription();
-                case 2 -> expenseDTO = selectExpenseByAmount();
-                case 3 -> expenseDTO = selectExpenseByCategory();
-                case 4 -> expenseDTO = selectExpenseByDate();
+                case 2 -> expenseDTO = selectExpenseByCategory();
+                case 3 -> expenseDTO = selectExpenseByDate();
+                case 4 -> expenseDTO = selectExpenseByAmount();
                 case 5 -> expenseDTO = selectExpense();
                 default -> System.out.println("La opción ingresada no es válida");
             }
         } while (option < 1 || option > 5);
+
+        System.out.println("** gasto devuelto en submenuManageExpenses: " + expenseDTO);
 
         return expenseDTO;
     }
@@ -267,18 +408,9 @@ public class ExpenseDAOImpl implements ExpenseDAO {
         System.out.print("Por favor ingresar el texto a buscar en la descripción: ");
         String textToBeFound = scanner.next();
 
-        List<ExpenseDTO> filteredExpenses = allExpensesDTO.stream()
+        return allExpensesDTO.stream()
                 .filter(e -> e.getDescription().contains(textToBeFound))
                 .toList();
-
-        if(filteredExpenses.isEmpty()) {
-            System.out.println("No se encontró ningún gasto con esa descripción.");
-        } else {
-            System.out.println("Los gastos con el texto " + textToBeFound + " son: ");
-            printList(filteredExpenses);
-        }
-
-        return filteredExpenses;
     }
 
     public List<ExpenseDTO> findExpensesByAmount() {
@@ -311,7 +443,15 @@ public class ExpenseDAOImpl implements ExpenseDAO {
 
     @Override
     public ExpenseDTO selectExpenseByDescription() {
-        return selectTFromList(findExpensesByDescription(), "Elija el gasto de la lista filtrada por descripción: ");
+        List<ExpenseDTO> filteredExpenses = findExpensesByDescription();
+        if (filteredExpenses.isEmpty()) {
+            System.out.println("No se encontró ningún gasto con esa descripción.");
+            return null;
+        } else {
+            ExpenseDTO expenseDTO = selectTFromList(filteredExpenses, "Elija el gasto de la lista filtrada por descripción: ");
+            System.out.println("** gasto elegido en selectExpenseByDescription: " + expenseDTO);
+            return expenseDTO;
+        }
     }
 
     @Override
